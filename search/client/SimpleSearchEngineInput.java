@@ -2,6 +2,8 @@ package search.client;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class SimpleSearchEngineInput {
@@ -11,17 +13,17 @@ public class SimpleSearchEngineInput {
         return Integer.parseInt(SCANNER.nextLine());
     }
 
-    public static String[] readInputFile(String filename) {
+    public static List<String> readInputFile(String filename) {
         var recordFile = new File(filename);
-        var recordBuilder = new StringBuilder();
+        List<String> recordBuilder = new ArrayList<>();
         try (var fileStream = new Scanner(recordFile)) {
             while (fileStream.hasNextLine()) {
-                recordBuilder.append(fileStream.nextLine()).append('\n');
+                recordBuilder.add(fileStream.nextLine());
             }
         } catch (FileNotFoundException ignored) {
             System.out.println("File not Found!");
         }
-        return recordBuilder.toString().split("\n");
+        return recordBuilder;
     }
 
     public static String readUserSearchKey() {
