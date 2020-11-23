@@ -12,6 +12,7 @@ public class SimpleSearchEngine {
             var record = records[i].toLowerCase();
             if (record.contains(lowerCasedSearchKey)) {
                 index = i;
+                break;
             }
         }
 
