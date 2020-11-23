@@ -2,15 +2,18 @@ package search.client;
 
 import search.engine.SimpleSearchEngine;
 
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 public class SimpleSearchEngineCLI {
-    private static String[] RECORDS;
+    private static List<String> RECORDS;
+    private static SimpleSearchEngine SEARCH_ENGINE;
 
     public static void run(String recordFileName) {
         RECORDS = SimpleSearchEngineInput.readInputFile(recordFileName);
-        int menuChoice;
+        SEARCH_ENGINE = new SimpleSearchEngine(RECORDS);
 
+        int menuChoice;
         do {
             printMenu();
             menuChoice = SimpleSearchEngineInput.readMenuChoice();
@@ -44,8 +47,8 @@ public class SimpleSearchEngineCLI {
     private static void runFindPerson() {
         System.out.println("Enter data to search people:");
         var searchKey = SimpleSearchEngineInput.readUserSearchKey();
-        var foundRecords = SimpleSearchEngine.findCoincidences(RECORDS, searchKey);
-        if (foundRecords.length > 0) {
+        var foundRecords = SEARCH_ENGINE.search(searchKey);
+        if (foundRecords.size() > 0) {
             System.out.println("Found people:");
             printRecords(foundRecords);
         } else {
@@ -66,8 +69,8 @@ public class SimpleSearchEngineCLI {
         System.out.println(menu);
     }
 
-    private static void printRecords(String[] records) {
-        Arrays.stream(records).forEach(System.out::println);
+    private static void printRecords(Collection<?> records) {
+        records.forEach(System.out::println);
     }
 
 }
