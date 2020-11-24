@@ -1,6 +1,9 @@
 package search.client;
 
 import search.engine.SimpleSearchEngine;
+import search.engine.algorithms.ContainsAllWordsAlgorithm;
+import search.engine.algorithms.ContainsAtLeastOneWordAlgorithm;
+import search.engine.algorithms.NotContainsAnyWordAlgorithm;
 
 import java.util.Collection;
 import java.util.List;
@@ -11,7 +14,7 @@ public class SimpleSearchEngineCLI {
 
     public static void run(String recordFileName) {
         RECORDS = SimpleSearchEngineInput.readInputFile(recordFileName);
-        SEARCH_ENGINE = new SimpleSearchEngine(RECORDS);
+        SEARCH_ENGINE = new SimpleSearchEngine();
 
         int menuChoice;
         do {
@@ -45,15 +48,40 @@ public class SimpleSearchEngineCLI {
     }
 
     private static void runFindPerson() {
-        System.out.println("Enter data to search people:");
+        setSearchEngineStrategy();
+        System.out.println("Enter a name or email to search all suitable people:");
         var searchKey = SimpleSearchEngineInput.readUserSearchKey();
         var foundRecords = SEARCH_ENGINE.search(searchKey);
         if (foundRecords.size() > 0) {
-            System.out.println("Found people:");
+            System.out.printf("%d persons found:%n", foundRecords.size());
             printRecords(foundRecords);
         } else {
             System.out.println("No matching people found.");
         }
+    }
+
+    private static void setSearchEngineStrategy() {
+        boolean wrongStrategy;
+        do {
+            wrongStrategy = false;
+            System.out.println("Select a matching strategy: ALL, ANY, NONE");
+            String searchStrategy = SimpleSearchEngineInput.readUserSearchStrategy();
+            switch (searchStrategy.toUpperCase()) {
+                case "ALL":
+                    SEARCH_ENGINE.setSearchStrategy(new ContainsAllWordsAlgorithm(RECORDS));
+                    break;
+                case "ANY":
+                    SEARCH_ENGINE.setSearchStrategy(new ContainsAtLeastOneWordAlgorithm(RECORDS));
+                    break;
+                case "NONE":
+                    SEARCH_ENGINE.setSearchStrategy(new NotContainsAnyWordAlgorithm(RECORDS));
+                    break;
+                default:
+                    System.out.println("Please, select a valid strategy!");
+                    wrongStrategy = true;
+                    break;
+            }
+        } while (wrongStrategy);
     }
 
     private static void runExit() {
