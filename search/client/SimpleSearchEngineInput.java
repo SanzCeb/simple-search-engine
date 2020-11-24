@@ -29,4 +29,8 @@ public class SimpleSearchEngineInput {
     public static String readUserSearchKey() {
         return SCANNER.nextLine();
     }
+
+    public static String readUserSearchStrategy() {
+        return SCANNER.nextLine();
+    }
 }
