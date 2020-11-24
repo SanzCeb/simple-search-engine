@@ -18,4 +18,9 @@ public abstract class SimpleSearchStrategy {
     private List<String[]> parseRecords(List<String> data) {
         return data.stream().map(record -> record.split(" ")).collect(Collectors.toList());
     }
+
+    protected void addInvertedIndex (String searchKey, int index) {
+        invertedIndexes.putIfAbsent(searchKey, new HashSet<>());
+        invertedIndexes.get(searchKey).add(index);
+    }
 }
